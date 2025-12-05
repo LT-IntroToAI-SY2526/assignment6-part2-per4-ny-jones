@@ -24,18 +24,22 @@ def load_and_explore_data(filename):
         pandas DataFrame containing the data
     """
     # TODO: Load the CSV file using pandas
-    
+    df = pd.read_csv(filename)
     # TODO: Print the first 5 rows
-    
+    print("First 5 rows of the dataset:")
+    print(df.head(), "\n")
     # TODO: Print the shape of the dataset
-    
+    print("Shape of the dataset (row,columns)")
+    print(df.shape, "\n")
     # TODO: Print basic statistics for ALL columns
+    print("The basic statistics for all the columns")
+    print(df.describe(include= "all"), "\n")
     
     # TODO: Print the column names
-    
+    print("Column Names:")
+    print(df.columns, "\n")
     # TODO: Return the dataframe
-    pass
-
+    return df
 
 def visualize_features(data):
     """
@@ -45,36 +49,52 @@ def visualize_features(data):
         data: pandas DataFrame with features and Price
     """
     # TODO: Create a figure with 2x2 subplots, size (12, 10)
-    
+    figs, axes = plt.subplots(2,2, figsize=(12,10))
     # TODO: Add a main title: 'House Features vs Price'
-    
+    fig.suptitle('House Features vs Price', fontsize=16)
     # TODO: Plot 1 (top left): SquareFeet vs Price
     #       - scatter plot, color='blue', alpha=0.6
     #       - labels and title
     #       - grid
-    
+    axes[0,0].scatter(data['SquareFeet'], data['Price'], color = 'blue', alpha = 0.6)
+    axes[0,0].set_title('SquareFeet vs Price')
+    axes[0,0].set_xlable('Sqaure Feet')
+    axes[0,0].set_ylable('Price')
+    axes[0,0].grid(True)
     # TODO: Plot 2 (top right): Bedrooms vs Price
     #       - scatter plot, color='green', alpha=0.6
     #       - labels and title
     #       - grid
-    
+    axes[0,1].scatter(data['Bedrooms'], data['Price'], color = 'green', alpha =0.6)
+    axes[0,1].set_title('Bedroom vs Price', font=16)
+    axes[0,1].set_xlable('Bedroom', font=16)
+    axes[0,1].set_ylable('Price')
+    axes[0,1].grid(True)
     # TODO: Plot 3 (bottom left): Bathrooms vs Price
     #       - scatter plot, color='red', alpha=0.6
     #       - labels and title
     #       - grid
-    
+    axes[1,0].scatter(data['Bathrooms'],data['Price'], color 'red', alpha= 0.6)
+    axes[1,0].set_title('Bathrooms vs Price')
+    axes[1,0].set_xlable('Bathroom')
+    axes[1,0].set_ylable('Price')
+    axes[1,0].grid(True)
     # TODO: Plot 4 (bottom right): Age vs Price
     #       - scatter plot, color='orange', alpha=0.6
     #       - labels and title
     #       - grid
-    
+    axes[1,1].scatter(data['Age'],data['Price'], color='orange', alpha =0.6)
+    axes[1,1].set_title('Ave vs Price')
+    axes[1,1].set_xtitle('Age')
+    axes[1,1].set_ytitle('Price')
+    axes[1,1].grid(True)
     # TODO: Use plt.tight_layout() to make plots fit nicely
-    
+    ptl.tight_layout(rect=[0,0,1,0.96]
     # TODO: Save the figure as 'feature_plots.png' with dpi=300
+    plt.savefig('feature_plots.png', dpi=300)
     
     # TODO: Show the plot
-    pass
-
+    ptl.show()
 
 def prepare_features(data):
     """
@@ -89,17 +109,18 @@ def prepare_features(data):
     """
     # TODO: Create a list of feature column names
     #       ['SquareFeet', 'Bedrooms', 'Bathrooms', 'Age']
-    
+    feature_cols=['SquareFeet', 'Bedrooms', 'Bathrooms', 'Age']
+
     # TODO: Create X by selecting those columns from data
-    
+    X= data[feature_cols]
     # TODO: Create y by selecting the 'Price' column
-    
+    y= data['Price']
     # TODO: Print the shape of X and y
-    
+    print(X.shape, y.shape)
     # TODO: Print the feature column names
-    
+    print(feature_cols)
     # TODO: Return X and y
-    pass
+    return X, y
 
 
 def split_data(X, y):
@@ -114,11 +135,13 @@ def split_data(X, y):
         X_train, X_test, y_train, y_test
     """
     # TODO: Split into train (80%) and test (20%) with random_state=42
+    X_train, X_test, y_train, y_test= train_test_split( X,y, test_size= 0.2, random_state=42)
     
     # TODO: Print how many samples are in training and testing sets
-    
+    print(X_train.shape[0])
+    print(X_test.shape[0])
     # TODO: Return X_train, X_test, y_train, y_test
-    pass
+    return X_train, X_test, y_train, y_test
 
 
 def train_model(X_train, y_train, feature_names):
@@ -134,15 +157,16 @@ def train_model(X_train, y_train, feature_names):
         trained LinearRegression model
     """
     # TODO: Create a LinearRegression model
-    
+    model= LinearRegression()
     # TODO: Train the model using fit()
-    
+    model.fit(X_train, y_train)
     # TODO: Print the intercept
-    
+    print(model.intercept)
     # TODO: Print each coefficient with its feature name
     #       Hint: use zip(feature_names, model.coef_)
-    
+    print(zip(feature_names, model.coef))
     # TODO: Print the full equation in readable format
+    equation= "Price= " + str(model.intercept_)
     
     # TODO: Return the trained model
     pass
